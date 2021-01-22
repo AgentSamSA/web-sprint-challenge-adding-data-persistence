@@ -7,11 +7,8 @@ const router = express.Router();
 router.get("/", (req, res) => {
     Projects.getProjects()
         .then(projects => {
-            projects.map(project => {
-                const toBoolean = project.project_completed;
-                toBoolean === 1
-                    ? project.project_completed = true
-                    : project.project_completed = false;
+            projects.forEach(project => {
+                project.project_completed = !!project.project_completed;
             });
             res.status(200).json(projects);
         })
@@ -23,10 +20,7 @@ router.get("/", (req, res) => {
 router.post("/", (req, res) => {
     Projects.insertProject(req.body)
         .then(project => {
-            const toBoolean = project.project_completed;
-            toBoolean === 1
-                ? project.project_completed = true
-                : project.project_completed = false;
+            project.project_completed = !!project.project_completed;
             res.status(201).json(project);
         })
         .catch(err => {

@@ -7,11 +7,8 @@ const router = express.Router();
 router.get("/", (req, res) => {
     Tasks.getTasks()
         .then(tasks => {
-            tasks.map(task => {
-                const toBoolean = task.task_completed;
-                toBoolean === 1
-                    ? task.task_completed = true
-                    : task.task_completed = false;
+            tasks.forEach(task => {
+                task.task_completed = !!task.task_completed;
             });
             res.status(200).json(tasks);
         })
@@ -26,10 +23,7 @@ router.post("/", (req, res) => {
             if (!task.project_id || !task.task_description) {
                 res.status(400).json({ message: "Please include a description and project id" });
             } else {
-                const toBoolean = task.task_completed;
-                toBoolean === 1
-                    ? task.task_completed = true
-                    : task.task_completed = false;
+                task.task_completed = !!task.task_completed;
                 res.status(201).json(task);
             }
         })
